@@ -194,14 +194,20 @@ def trans(callback: CallbackQuery):
     bot.register_next_step_handler(
         callback.message, lambda message: add_amount(user_id, message)
     )
-
+ 
 
 def add_amount(user_id: int, message: Message):
-    amount = int(message.text)
-    bot.send_message(message.chat.id, "Введите комментарий")
-    bot.register_next_step_handler(
-        message, lambda message: add_commentary(amount, user_id, message)
-    )
+    try:
+        amount = int(message.text)
+        bot.send_message(message.chat.id, "Введите комментарий")
+        bot.register_next_step_handler(
+            message, lambda message: add_commentary(amount, user_id, message)
+        )
+    except ValueError:
+        bot.send_message(message.chat.id, "Недопустимое значение")
+        bot.register_next_step_handler(
+            message, lambda message: add_amount(user_id, message)
+        )
 
 
 def add_commentary(amount: int, user_id: int, message: Message):
